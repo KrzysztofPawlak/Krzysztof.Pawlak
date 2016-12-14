@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Krzysztof.Pawlak</string>
+    <string name="title_activity_splash">Splash</string>
 </resources>
