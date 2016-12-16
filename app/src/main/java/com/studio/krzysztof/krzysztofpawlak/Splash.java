@@ -2,11 +2,15 @@ package com.studio.krzysztof.krzysztofpawlak;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 public class Splash extends AppCompatActivity {
 
     private static final int TIME = 5000;
+
+    private Handler han;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,20 +28,30 @@ public class Splash extends AppCompatActivity {
 //            }
 //        });
 
-        Thread newThread = new Thread() {
+        han = new Handler();
+        han.postDelayed(new Runnable() {
             @Override
             public void run() {
-                super.run();
-                try {
-                    sleep(TIME);
-                    Intent i = new Intent(Splash.this, MainActivity.class);
-                    startActivity(i);
-                    finish();
-                } catch (InterruptedException e) {
-
-                }
+                Intent i = new Intent(Splash.this, MainActivity.class);
+                        startActivity(i);
+                        finish();
             }
-        };
-        newThread.start();
+        }, TIME);
+    }
+
+    int backButtonCount;
+
+    // stop transition to MainActivity when onBackPressed
+    @Override
+    public void onBackPressed() {
+
+        if(backButtonCount >= 1) {
+            super.onBackPressed();
+        } else {
+            han.removeCallbacksAndMessages(null);
+            Toast.makeText(this, "Przyciśnij przycisk jeszcze raz, aby wyjść z aplikacji.", Toast.LENGTH_SHORT).show();
+        }
+
+        backButtonCount++;
     }
 }
