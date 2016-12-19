@@ -10,12 +10,13 @@ public class Splash extends AppCompatActivity {
 
     private static final int TIME = 5000;
 
-    private Handler han;
+    private Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash);
+        getSupportActionBar().hide();
+        setContentView(R.layout.splash_screen);
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
 //
@@ -28,8 +29,8 @@ public class Splash extends AppCompatActivity {
 //            }
 //        });
 
-        han = new Handler();
-        han.postDelayed(new Runnable() {
+        handler = new Handler();
+        handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 Intent i = new Intent(Splash.this, MainActivity.class);
@@ -41,14 +42,13 @@ public class Splash extends AppCompatActivity {
 
     int backButtonCount;
 
-    // stop transition to MainActivity when onBackPressed
     @Override
     public void onBackPressed() {
 
         if(backButtonCount >= 1) {
             super.onBackPressed();
         } else {
-            han.removeCallbacksAndMessages(null);
+            handler.removeCallbacksAndMessages(null);
             Toast.makeText(this, "Przyciśnij przycisk jeszcze raz, aby wyjść z aplikacji.", Toast.LENGTH_SHORT).show();
         }
 
