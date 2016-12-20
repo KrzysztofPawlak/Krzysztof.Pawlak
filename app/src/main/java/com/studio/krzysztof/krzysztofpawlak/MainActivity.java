@@ -37,4 +37,10 @@ public class MainActivity extends AppCompatActivity {
             rotate();
         }
     };
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
 }

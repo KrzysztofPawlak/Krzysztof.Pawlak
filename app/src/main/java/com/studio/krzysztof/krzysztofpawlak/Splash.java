@@ -11,6 +11,8 @@ public class Splash extends AppCompatActivity {
     private static final int TIME = 5000;
 
     private Handler handler;
+    private boolean isMinimazed = false;
+    private boolean splashIsCanceled = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,8 +36,8 @@ public class Splash extends AppCompatActivity {
             @Override
             public void run() {
                 Intent i = new Intent(Splash.this, MainActivity.class);
-                        startActivity(i);
-                        finish();
+                startActivity(i);
+                finish();
             }
         }, TIME);
     }
@@ -45,13 +47,48 @@ public class Splash extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
-        if(backButtonCount >= 1) {
+        if (backButtonCount >= 1) {
             super.onBackPressed();
+            finish();
         } else {
             handler.removeCallbacksAndMessages(null);
+            splashIsCanceled = true;
             Toast.makeText(this, "Przyciśnij przycisk jeszcze raz, aby wyjść z aplikacji.", Toast.LENGTH_SHORT).show();
         }
 
         backButtonCount++;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        handler.removeCallbacksAndMessages(null);
+        isMinimazed = true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        backButtonCount = 0;
+        if (isMinimazed && (splashIsCanceled == false)) {
+            Intent i = new Intent(Splash.this, MainActivity.class);
+            startActivity(i);
+            isMinimazed = false;
+            finish();
+        } else if (isMinimazed && (splashIsCanceled == true)){
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent i = new Intent(Splash.this, MainActivity.class);
+                    startActivity(i);
+                    finish();
+                }
+            }, TIME);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }
