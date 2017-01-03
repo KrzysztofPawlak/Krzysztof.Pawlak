@@ -19,17 +19,6 @@ public class Splash extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         setContentView(R.layout.splash_screen);
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-//
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
 
         handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -46,7 +35,6 @@ public class Splash extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-
         if (backButtonCount >= 1) {
             super.onBackPressed();
             finish();
@@ -55,7 +43,6 @@ public class Splash extends AppCompatActivity {
             splashIsCanceled = true;
             Toast.makeText(this, "Przyciśnij przycisk jeszcze raz, aby wyjść z aplikacji.", Toast.LENGTH_SHORT).show();
         }
-
         backButtonCount++;
     }
 
@@ -75,7 +62,7 @@ public class Splash extends AppCompatActivity {
             startActivity(i);
             isMinimazed = false;
             finish();
-        } else if (isMinimazed && (splashIsCanceled == true)){
+        } else if (isMinimazed && (splashIsCanceled == true)) {
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
