@@ -24,7 +24,7 @@ public class Splash extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent i = new Intent(Splash.this, MainActivity.class);
+                Intent i = new Intent(Splash.this, LoginActivity.class);
                 startActivity(i);
                 finish();
             }
@@ -58,7 +58,7 @@ public class Splash extends AppCompatActivity {
         super.onResume();
         backButtonCount = 0;
         if (isMinimazed && (splashIsCanceled == false)) {
-            Intent i = new Intent(Splash.this, MainActivity.class);
+            Intent i = new Intent(Splash.this, LoginActivity.class);
             startActivity(i);
             isMinimazed = false;
             finish();
@@ -66,7 +66,7 @@ public class Splash extends AppCompatActivity {
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent i = new Intent(Splash.this, MainActivity.class);
+                    Intent i = new Intent(Splash.this, LoginActivity.class);
                     startActivity(i);
                     finish();
                 }
