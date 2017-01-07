@@ -16,9 +16,6 @@ import android.widget.ImageView;
 
 public class LoginActivity extends AppCompatActivity {
 
-    String emailU;
-    String hasloU;
-
     private ImageView image;
     View.OnClickListener btnRotate = new View.OnClickListener() {
         @Override
@@ -81,26 +78,17 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         if (!hasErrors) {
-            signUp(email, password);
+            signUp();
         }
     }
 
-    // TODO without variables emailU, hasloU
-    private void signUp(String email, String password) {
-        if (email.equals(emailU)) {
-            if (password.equals(hasloU)) {
-                savePreferences("checkbox", true);
+    private void signUp() {
+        savePreferences("checkbox", true);
 
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
 
-                finish();
-            } else {
-                mPasswordEditText.setError("nieprawidlowe haslo!");
-            }
-        } else {
-            mEmailEditText.setError("e-mailu nie ma w bazie, wprowadź inny e-mail!");
-        }
+        finish();
     }
 
     private void savePreferences(String key, boolean value) {

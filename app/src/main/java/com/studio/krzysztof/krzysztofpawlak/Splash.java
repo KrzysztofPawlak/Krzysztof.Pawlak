@@ -1,8 +1,10 @@
 package com.studio.krzysztof.krzysztofpawlak;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
@@ -20,15 +22,30 @@ public class Splash extends AppCompatActivity {
         getSupportActionBar().hide();
         setContentView(R.layout.splash_screen);
 
+        final SharedPreferences getPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        boolean isLogged = getPrefs.getBoolean("checkbox", false);
+
         handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent i = new Intent(Splash.this, LoginActivity.class);
-                startActivity(i);
+                chooseNextAcivity();
                 finish();
             }
         }, TIME);
+    }
+
+    public void chooseNextAcivity() {
+        SharedPreferences getPrefs = PreferenceManager.getDefaultSharedPreferences(getApplication());
+        boolean isLogged = getPrefs.getBoolean("checkbox", false);
+
+        if(isLogged == false) {
+            Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+            startActivity(i);
+        } else {
+            Intent i = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(i);
+        }
     }
 
     int backButtonCount;
