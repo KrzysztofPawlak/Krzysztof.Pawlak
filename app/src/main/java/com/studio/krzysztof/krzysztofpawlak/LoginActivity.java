@@ -17,22 +17,10 @@ import android.widget.ImageView;
 public class LoginActivity extends AppCompatActivity {
 
     private ImageView image;
-    View.OnClickListener btnRotate = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            rotate();
-        }
-    };
     private Button buttonRotate;
     private Button mSignUpButton;
     private EditText mEmailEditText;
     private EditText mPasswordEditText;
-    View.OnClickListener btnSign = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            tryToSignUp();
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +38,20 @@ public class LoginActivity extends AppCompatActivity {
 
         rotate();
     }
+
+    View.OnClickListener btnRotate = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            rotate();
+        }
+    };
+
+    View.OnClickListener btnSign = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            tryToSignUp();
+        }
+    };
 
     public void rotate() {
         Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_anim);
