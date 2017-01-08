@@ -39,7 +39,7 @@ public class Splash extends AppCompatActivity {
         SharedPreferences getPrefs = PreferenceManager.getDefaultSharedPreferences(getApplication());
         boolean isLogged = getPrefs.getBoolean("checkbox", false);
 
-        if(isLogged == false) {
+        if (isLogged == false) {
             Intent i = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(i);
         } else {
@@ -74,20 +74,10 @@ public class Splash extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         backButtonCount = 0;
-        if (isMinimazed && (splashIsCanceled == false)) {
-            Intent i = new Intent(Splash.this, LoginActivity.class);
-            startActivity(i);
+        if (splashIsCanceled || isMinimazed) {
+            chooseNextAcivity();
             isMinimazed = false;
             finish();
-        } else if (isMinimazed && (splashIsCanceled == true)) {
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    Intent i = new Intent(Splash.this, LoginActivity.class);
-                    startActivity(i);
-                    finish();
-                }
-            }, TIME);
         }
     }
 
