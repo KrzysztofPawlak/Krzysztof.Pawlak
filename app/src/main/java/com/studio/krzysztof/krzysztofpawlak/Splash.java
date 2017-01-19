@@ -29,10 +29,18 @@ public class Splash extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                chooseNextAcivity();
+//                chooseNextAcivity();
                 finish();
             }
         }, TIME);
+
+        tmpActivity();
+    }
+
+    public void tmpActivity() {
+        Intent i = new Intent(getApplicationContext(), PhotoActivity.class);
+        startActivity(i);
+        finish();
     }
 
     public void chooseNextAcivity() {
