@@ -17,24 +17,24 @@ import java.util.List;
  * Created by Krzysiek on 2017-01-19.
  */
 
-public class CustomAdapter extends BaseAdapter{
-    private List<Response.ArrayBean> mCustomItem;
+public class CustomAdapter extends BaseAdapter {
+    private List<Response.ArrayBean> mCustomList;
     private Context mContext;
     private LayoutInflater inflater;
 
-    public CustomAdapter(Context mContext, List<Response.ArrayBean> mCustomItem) {
+    public CustomAdapter(Context mContext, List<Response.ArrayBean> mCustomList) {
         this.mContext = mContext;
-        this.mCustomItem = mCustomItem;
+        this.mCustomList = mCustomList;
     }
 
     @Override
     public int getCount() {
-        return mCustomItem.size();
+        return mCustomList.size();
     }
 
     @Override
     public Object getItem(int i) {
-        return mCustomItem.get(i);
+        return mCustomList.get(i);
     }
 
     @Override
@@ -60,10 +60,16 @@ public class CustomAdapter extends BaseAdapter{
                 .error(R.drawable.error)
                 .fit()
                 .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
+                .placeholder(R.drawable.sample)
                 .into(picture);
         title.setText(item.getTitle());
         desc.setText(item.getDesc());
 
         return rowView;
+    }
+
+    public void addListItemToAdapter(List<Response.ArrayBean> list) {
+        mCustomList.addAll(list);
+        this.notifyDataSetChanged();
     }
 }
