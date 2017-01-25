@@ -52,7 +52,8 @@ public class PhotoActivity extends AppCompatActivity {
                 if (absListView.getLastVisiblePosition() == i2 - 1 && listView.getCount() >= 10 && isLoading == false) {
                     isLoading = true;
                     nrJSONFile++;
-                    responseObject = takeData();
+                    mHandler.sendEmptyMessage(0);
+                    takeData();
                 }
             }
         });
@@ -80,16 +81,15 @@ public class PhotoActivity extends AppCompatActivity {
                 if (!responseString.contains("Error 404 - Page Not Found")) {
                     gson = new Gson();
                     responseObject = gson.fromJson(responseString, Response.class);
-
                     if (nrJSONFile == 0) {
                         adapter = new CustomAdapter(PhotoActivity.this, responseObject.getArray());
                         listView.setAdapter(adapter);
                     } else {
-                        mHandler.sendEmptyMessage(0);
                         Message msg = mHandler.obtainMessage(1, responseObject.getArray());
                         mHandler.sendMessage(msg);
                     }
                 }
+                mHandler.sendEmptyMessage(2);
             }
 
             @Override
@@ -122,8 +122,10 @@ public class PhotoActivity extends AppCompatActivity {
                     break;
                 case 1:
                     adapter.addListItemToAdapter((ArrayList<Response.ArrayBean>) msg.obj);
-                    listView.removeFooterView(ftView);
                     isLoading = false;
+                    break;
+                case 2:
+                    listView.removeFooterView(ftView);
                     break;
                 default:
                     break;
