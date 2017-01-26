@@ -7,8 +7,8 @@ import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -19,11 +19,12 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
+import in.srain.cube.views.GridViewWithHeaderAndFooter;
 
 public class PhotoActivity extends AppCompatActivity {
 
     ListView listView;
-    GridView gridView;
+    GridViewWithHeaderAndFooter gridView;
     Response responseObject;
     CustomAdapter adapter;
     //    static String BASE_SERVER_URL = "http://127.0.0.1:8080/Android_2017_zadanie_3_dane/page_0.json";
@@ -41,10 +42,8 @@ public class PhotoActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_photo);
         setContentView(R.layout.grid_view_2);
-//        listView = (ListView) findViewById(R.id.list);
-        gridView = (GridView) findViewById(R.id.gridview2);
+        gridView = (GridViewWithHeaderAndFooter) findViewById(R.id.gridview2);
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -53,22 +52,21 @@ public class PhotoActivity extends AppCompatActivity {
             }
         });
 
-//        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
-//            @Override
-//            public void onScrollStateChanged(AbsListView absListView, int i) {
-//
-//            }
-//
-//            @Override // tu musi byc pobranie nowego pliku
-//            public void onScroll(AbsListView absListView, int i, int i1, int i2) {
-//                if (absListView.getLastVisiblePosition() == i2 - 1 && listView.getCount() >= 10 && isLoading == false) {
-//                    isLoading = true;
-//                    nrJSONFile++;
-//                    mHandler.sendEmptyMessage(0);
-//                    takeData();
-//                }
-//            }
-//        });
+        gridView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView absListView, int i) {
+
+            }
+
+            @Override // tu musi byc pobranie nowego pliku
+            public void onScroll(AbsListView absListView, int i, int i1, int i2) {
+                if (absListView.getLastVisiblePosition() == i2 - 1 && gridView.getCount() >= 10 && isLoading == false) {
+                    isLoading = true;
+                    nrJSONFile++;
+                    takeData();
+                }
+            }
+        });
 
         LayoutInflater li = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         ftView = li.inflate(R.layout.footer_view, null);
@@ -78,7 +76,6 @@ public class PhotoActivity extends AppCompatActivity {
 //        progressBar.setVisibility(View.GONE);
 
         client = new AsyncHttpClient();
-
         responseObject = takeData();
     }
 
@@ -94,17 +91,17 @@ public class PhotoActivity extends AppCompatActivity {
                     gson = new Gson();
                     responseObject = gson.fromJson(responseString, Response.class);
                     if (nrJSONFile == 0) {
-//                        adapter = new CustomAdapter(PhotoActivity.this, responseObject.getArray());
-//                        listView.setAdapter(adapter);
-
                         adapter = new CustomAdapter(PhotoActivity.this, responseObject.getArray());
+                        gridView.addFooterView(ftView);
                         gridView.setAdapter(adapter);
                     } else {
-//                        Message msg = mHandler.obtainMessage(1, responseObject.getArray());
-//                        mHandler.sendMessage(msg);
+                        Message msg = mHandler.obtainMessage(1, responseObject.getArray());
+                        mHandler.sendMessage(msg);
                     }
+                } else {
+                    mHandler.sendEmptyMessage(2);
                 }
-//                mHandler.sendEmptyMessage(2);
+
             }
 
             @Override
@@ -133,14 +130,14 @@ public class PhotoActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 0:
-                    listView.addFooterView(ftView);
+                    gridView.addFooterView(ftView); // now isn't working
                     break;
                 case 1:
                     adapter.addListItemToAdapter((ArrayList<Response.ArrayBean>) msg.obj);
                     isLoading = false;
                     break;
                 case 2:
-                    listView.removeFooterView(ftView);
+                    gridView.removeFooterView(ftView);
                     break;
                 default:
                     break;
