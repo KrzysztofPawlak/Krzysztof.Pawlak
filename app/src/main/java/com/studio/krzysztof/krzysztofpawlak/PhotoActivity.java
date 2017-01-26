@@ -42,7 +42,7 @@ public class PhotoActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.grid_view_2);
+        setContentView(R.layout.grid_view);
         gridView = (GridViewWithHeaderAndFooter) findViewById(R.id.gridview2);
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

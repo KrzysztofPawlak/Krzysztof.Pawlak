@@ -1,33 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="horizontal"
     android:background="#4588E4">
 
-    <ImageView
-        android:id="@+id/imageIv"
-        android:layout_width="100dp"
-        android:layout_height="100dp" />
 
-    <TextView
-        android:layout_marginTop="20dp"
-        android:id="@+id/titleTv"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/imageIv"
-        android:layout_margin="10dp"
-        android:textSize="15dp"
-        android:textColor="#FFFF"/>
+        android:layout_weight="1">
+        <ImageView
+            android:id="@+id/imageIv"
+            android:adjustViewBounds="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+             />
+    </LinearLayout>
 
-    <TextView
-        android:layout_marginTop="20dp"
-        android:id="@+id/descTv"
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/imageIv"
-        android:layout_below="@id/titleTv"
-        android:layout_margin="10dp"
-        android:textSize="15dp"
-        android:textColor="#FFFF"/>
-</RelativeLayout>
+        android:layout_weight="1"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/titleTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/imageIv"
+            android:layout_margin="5dp"
+            android:textSize="12dp"
+            android:textColor="#FFFF" />
+
+        <TextView
+            android:layout_marginLeft="10dp"
+            android:id="@+id/descTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/imageIv"
+            android:layout_below="@id/titleTv"
+            android:layout_margin="5dp"
+            android:textSize="12dp"
+            android:textColor="#FFFF" />
+
+    </LinearLayout>
+
+</LinearLayout>
