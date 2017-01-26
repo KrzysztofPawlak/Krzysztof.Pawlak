@@ -7,9 +7,10 @@ import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
@@ -22,6 +23,7 @@ import cz.msebera.android.httpclient.Header;
 public class PhotoActivity extends AppCompatActivity {
 
     ListView listView;
+    GridView gridView;
     Response responseObject;
     CustomAdapter adapter;
     //    static String BASE_SERVER_URL = "http://127.0.0.1:8080/Android_2017_zadanie_3_dane/page_0.json";
@@ -39,31 +41,41 @@ public class PhotoActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_photo);
-        listView = (ListView) findViewById(R.id.list);
-        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+//        setContentView(R.layout.activity_photo);
+        setContentView(R.layout.grid_view_2);
+//        listView = (ListView) findViewById(R.id.list);
+        gridView = (GridView) findViewById(R.id.gridview2);
+
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onScrollStateChanged(AbsListView absListView, int i) {
-
-            }
-
-            @Override // tu musi byc pobranie nowego pliku
-            public void onScroll(AbsListView absListView, int i, int i1, int i2) {
-                if (absListView.getLastVisiblePosition() == i2 - 1 && listView.getCount() >= 10 && isLoading == false) {
-                    isLoading = true;
-                    nrJSONFile++;
-                    mHandler.sendEmptyMessage(0);
-                    takeData();
-                }
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Toast.makeText(PhotoActivity.this, "" + position, Toast.LENGTH_SHORT).show();
             }
         });
+
+//        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+//            @Override
+//            public void onScrollStateChanged(AbsListView absListView, int i) {
+//
+//            }
+//
+//            @Override // tu musi byc pobranie nowego pliku
+//            public void onScroll(AbsListView absListView, int i, int i1, int i2) {
+//                if (absListView.getLastVisiblePosition() == i2 - 1 && listView.getCount() >= 10 && isLoading == false) {
+//                    isLoading = true;
+//                    nrJSONFile++;
+//                    mHandler.sendEmptyMessage(0);
+//                    takeData();
+//                }
+//            }
+//        });
 
         LayoutInflater li = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         ftView = li.inflate(R.layout.footer_view, null);
         mHandler = new MyHandler();
 
-        final ProgressBar progressBar = (ProgressBar) findViewById(R.id.myProgressBar);
-        progressBar.setVisibility(View.GONE);
+//        final ProgressBar progressBar = (ProgressBar) findViewById(R.id.myProgressBar);
+//        progressBar.setVisibility(View.GONE);
 
         client = new AsyncHttpClient();
 
@@ -82,14 +94,17 @@ public class PhotoActivity extends AppCompatActivity {
                     gson = new Gson();
                     responseObject = gson.fromJson(responseString, Response.class);
                     if (nrJSONFile == 0) {
+//                        adapter = new CustomAdapter(PhotoActivity.this, responseObject.getArray());
+//                        listView.setAdapter(adapter);
+
                         adapter = new CustomAdapter(PhotoActivity.this, responseObject.getArray());
-                        listView.setAdapter(adapter);
+                        gridView.setAdapter(adapter);
                     } else {
-                        Message msg = mHandler.obtainMessage(1, responseObject.getArray());
-                        mHandler.sendMessage(msg);
+//                        Message msg = mHandler.obtainMessage(1, responseObject.getArray());
+//                        mHandler.sendMessage(msg);
                     }
                 }
-                mHandler.sendEmptyMessage(2);
+//                mHandler.sendEmptyMessage(2);
             }
 
             @Override
