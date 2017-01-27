@@ -34,7 +34,8 @@ public class Splash extends AppCompatActivity {
             }
         }, TIME);
 
-        tmpActivity();
+//        tmpActivity();
+        chooseNextAcivity();
     }
 
     public void tmpActivity() {
