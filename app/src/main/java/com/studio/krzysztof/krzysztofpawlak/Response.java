@@ -7,13 +7,15 @@ import java.util.List;
  */
 
 public class Response {
-    
+
     private List<ArrayBean> array;
 
     public List<ArrayBean> getArray() {
         return array;
     }
-
+    public List<ArrayBean> getUrl() {
+        return array;
+    }
     public void setArray(List<ArrayBean> array) {
         this.array = array;
     }

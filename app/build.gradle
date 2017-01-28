@@ -5,7 +5,7 @@ android {
     buildToolsVersion "25.0.1"
     defaultConfig {
         applicationId "com.studio.krzysztof.krzysztofpawlak"
-        minSdkVersion 15
+        minSdkVersion 21
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -31,4 +31,7 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'org.immutables:gson:2.4.1'
     compile 'in.srain.cube:grid-view-with-header-footer:1.0.12'
+
+    compile 'com.android.support:cardview-v7:25.+'
+    compile 'com.android.support:recyclerview-v7:25.+'
 }

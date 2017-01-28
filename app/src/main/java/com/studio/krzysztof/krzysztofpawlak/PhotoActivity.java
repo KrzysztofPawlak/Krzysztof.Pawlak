@@ -1,10 +1,10 @@
 package com.studio.krzysztof.krzysztofpawlak;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AbsListView;
@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import cz.msebera.android.httpclient.Header;
 import in.srain.cube.views.GridViewWithHeaderAndFooter;
 
-public class PhotoActivity extends AppCompatActivity {
+public class PhotoActivity extends Activity {
 
     ListView listView;
     GridViewWithHeaderAndFooter gridView;

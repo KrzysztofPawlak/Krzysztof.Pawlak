@@ -1,14 +1,14 @@
 package com.studio.krzysztof.krzysztofpawlak;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
-public class Splash extends AppCompatActivity {
+public class Splash extends Activity {
 
     private static final int TIME = 5000;
 
@@ -19,7 +19,7 @@ public class Splash extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().hide();
+//        getSupportActionBar().hide();
         setContentView(R.layout.splash_screen);
 
         final SharedPreferences getPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
@@ -34,7 +34,10 @@ public class Splash extends AppCompatActivity {
             }
         }, TIME);
 
-        tmpActivity();
+//        tmpActivity();
+//        chooseNextAcivity();
+        Intent i = new Intent(getApplicationContext(), GridMaterialPhotoActivity.class);
+        startActivity(i);
     }
 
     public void tmpActivity() {
