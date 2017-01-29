@@ -3,6 +3,7 @@ package com.studio.krzysztof.krzysztofpawlak;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -13,13 +14,17 @@ import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
+import java.util.ArrayList;
+
 import cz.msebera.android.httpclient.Header;
 import in.srain.cube.views.GridViewWithHeaderAndFooter;
 
 public class GridMaterialPhotoActivity extends Activity {
     RecyclerView mRecyclerView;
-    RecyclerView.LayoutManager mLayoutManager;
-    RecyclerView.Adapter mAdapter;
+//    RecyclerView.LayoutManager mLayoutManager;
+    GridLayoutManager mLayoutManager;
+//    RecyclerView.Adapter mAdapter;
+    GridAdapter mAdapter;
 
     ListView listView;
     GridViewWithHeaderAndFooter gridView;
@@ -31,11 +36,16 @@ public class GridMaterialPhotoActivity extends Activity {
 
     public Handler mHandler;
     public View ftView;
-    public boolean isLoading = false;
+//    public boolean loading = false;
     int nrJSONFile = 0;
 
     Gson gson;
     AsyncHttpClient client;
+
+    private int previousTotal = 0;
+    private boolean loading = false;
+    private int visibleThreshold = 0;
+    int firstVisibleItem, visibleItemCount, totalItemCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,16 +54,41 @@ public class GridMaterialPhotoActivity extends Activity {
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mRecyclerView.setHasFixedSize(true);
+
         mLayoutManager = new GridLayoutManager(this, 2);
         mRecyclerView.setLayoutManager(mLayoutManager);
+        mLayoutManager.findLastVisibleItemPosition();
 
         client = new AsyncHttpClient();
         takeData();
 
-//        Toast.makeText(getApplicationContext(),"dziala",
-//                Toast.LENGTH_LONG).show();
-//        responseObject = takeData();
-//        takeData();
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                visibleItemCount = mRecyclerView.getChildCount();
+                totalItemCount = mLayoutManager.getItemCount();
+                firstVisibleItem = mLayoutManager.findFirstVisibleItemPosition();
+
+                if (loading) {
+                    if (totalItemCount > previousTotal) {
+                        loading = false;
+                        previousTotal = totalItemCount;
+                    }
+                }
+
+                if (!loading && (totalItemCount - visibleItemCount)
+                        <= (firstVisibleItem + visibleThreshold)) {
+                    loading = true;
+                    nrJSONFile++;
+                    takeData();
+                }
+            }
+        });
+
+        mHandler = new GridMaterialPhotoActivity.MyHandler();
     }
 
 
@@ -77,11 +112,13 @@ public class GridMaterialPhotoActivity extends Activity {
 //                        gridView.setAdapter(adapter);
                         mAdapter = new GridAdapter(GridMaterialPhotoActivity.this, responseObject.getArray());
                         mRecyclerView.setAdapter(mAdapter);
-
-
+//                        Toast.makeText(getApplicationContext(),"dodaj" + mAdapter.getItemCount(),
+//                                Toast.LENGTH_LONG).show();
                     } else {
-//                        Message msg = mHandler.obtainMessage(1, responseObject.getArray());
-//                        mHandler.sendMessage(msg);
+                        Message msg = mHandler.obtainMessage(1, responseObject.getArray());
+                        mHandler.sendMessage(msg);
+//                Toast.makeText(getApplicationContext(),"dodaj" + mAdapter.getItemCount(),
+//                        Toast.LENGTH_LONG).show();
                     }
                 } else {
 //                    mHandler.sendEmptyMessage(2);
@@ -109,6 +146,25 @@ public class GridMaterialPhotoActivity extends Activity {
         });
 
         return responseObject;
+    }
+    public class MyHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 0:
+                    gridView.addFooterView(ftView); // now isn't working
+                    break;
+                case 1:
+                    mAdapter.addListItemToAdapter((ArrayList<Response.ArrayBean>) msg.obj);
+                    loading = false;
+                    break;
+                case 2:
+                    gridView.removeFooterView(ftView);
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 }
 

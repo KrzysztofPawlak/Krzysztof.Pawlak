@@ -48,11 +48,32 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
                 .into(viewHolder.picture);
     }
 
+//    public void addListItemToAdapter(List<Response.ArrayBean> list) {
+////        mCustomList.addAll(list);
+////        mCustomList.remove(1);
+//        mCustomList.add(10, list.get(1));
+//        this.notifyDataSetChanged();
+//
+//    }
+
+    public void addListItemToAdapter(List<Response.ArrayBean> list) {
+        mCustomList.addAll(list);
+//        mCustomList.remove(1);
+//        mCustomList.add(0, new Response.ArrayBean());
+//        mCustomList.remove(1);
+        this.notifyDataSetChanged();
+
+    }
+
+    public int update() {
+        return 0;
+    }
+
     public int getItemCount() {
         return mCustomList.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder {
 
         public ImageView picture;
         public TextView title;
