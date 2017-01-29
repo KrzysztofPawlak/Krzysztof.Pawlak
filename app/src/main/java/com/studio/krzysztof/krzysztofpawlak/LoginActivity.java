@@ -21,6 +21,9 @@ public class LoginActivity extends Activity {
     private Button mSignUpButton;
     private EditText mEmailEditText;
     private EditText mPasswordEditText;
+    private boolean hasErrors;
+    private String email;
+    private String password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,10 +62,10 @@ public class LoginActivity extends Activity {
     }
 
     private void tryToSignUp() {
-        String email = mEmailEditText.getText().toString();
-        String password = mPasswordEditText.getText().toString();
+        email = mEmailEditText.getText().toString();
+        password = mPasswordEditText.getText().toString();
 
-        boolean hasErrors = false;
+        hasErrors = false;
 
         if (TextUtils.isEmpty(email)) {
             hasErrors = true;
@@ -87,7 +90,7 @@ public class LoginActivity extends Activity {
     private void signUp() {
         savePreferences("checkbox", true);
 
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        Intent intent = new Intent(getApplicationContext(), GridMaterialPhotoActivity.class);
         startActivity(intent);
 
         finish();

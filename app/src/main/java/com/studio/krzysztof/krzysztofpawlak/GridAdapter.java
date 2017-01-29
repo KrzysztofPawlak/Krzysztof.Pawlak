@@ -29,14 +29,6 @@ public class GridAdapter extends RecyclerView.Adapter {
         this.mCustomList = mCustomList;
     }
 
-//    @Override
-//    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-//        View v = LayoutInflater.from(viewGroup.getContext())
-//                .inflate(R.layout.grid_item, viewGroup, false);
-//        ViewHolder viewHolder = new ViewHolder(v);
-//        return viewHolder;
-//    }
-
     @Override
     public int getItemViewType(int position) {
         return mCustomList.get(position) != null ? VIEW_ITEM : VIEW_PROG;
@@ -72,43 +64,11 @@ public class GridAdapter extends RecyclerView.Adapter {
                     .placeholder(R.drawable.sample)
                     .into(((ViewHolder)holder).picture);
         } else {
-//            ((ProgressViewHolder) viewHolder).progressBar.setIndeterminate(true);
+            ((ProgressViewHolder) holder).progressBar.setIndeterminate(true);
         }
     }
 
-//    @Override
-//    public void onBindViewHolder(ViewHolder viewHolder, int position) {
-//        viewHolder.title.setText(mCustomList.get(position).getTitle());
-//        viewHolder.desc.setText(mCustomList.get(position).getDesc());
-//        Picasso.with(mContext)
-//                .load(mCustomList.get(position).getUrl())
-//                .error(R.drawable.error)
-//                .fit()
-//                .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
-//                .placeholder(R.drawable.sample)
-//                .into(viewHolder.picture);
-//    }
-
-//    @Override
-//    public void onBindViewHolder(ViewHolder viewHolder, int position) {
-//        if (viewHolder instanceof ViewHolder) {
-//            viewHolder.title.setText(mCustomList.get(position).getTitle());
-//            viewHolder.desc.setText(mCustomList.get(position).getDesc());
-//            Picasso.with(mContext)
-//                    .load(mCustomList.get(position).getUrl())
-//                    .error(R.drawable.error)
-//                    .fit()
-//                    .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
-//                    .placeholder(R.drawable.sample)
-//                    .into(viewHolder.picture);
-//        } else {
-////            ((ProgressViewHolder) viewHolder).progressBar.setIndeterminate(true);
-//        }
-//    }
-
     public void addListItemToAdapter(List<Response.ArrayBean> list) {
-//        mCustomList.remove(mCustomList.size() - 1);
-//        this.notifyItemRemoved(mCustomList.size());
         mCustomList.addAll(list);
         this.notifyDataSetChanged();
     }
