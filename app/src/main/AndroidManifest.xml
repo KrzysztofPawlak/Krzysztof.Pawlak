@@ -21,7 +21,6 @@
             android:name=".LoginActivity"
             android:theme="@style/AppTheme" />
         <activity android:name=".MainActivity" />
-        <activity android:name=".PhotoActivity" />
         <activity
             android:name=".GridMaterialPhotoActivity"
             android:label="@string/title_activity_test_material"></activity>

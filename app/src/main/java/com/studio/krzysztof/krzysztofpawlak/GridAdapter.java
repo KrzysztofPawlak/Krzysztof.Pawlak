@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.squareup.picasso.MemoryPolicy;
@@ -17,8 +18,9 @@ import java.util.List;
  * Created by Krzysiek on 2017-01-28.
  */
 
-public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
-
+public class GridAdapter extends RecyclerView.Adapter {
+    private final int VIEW_ITEM = 1;
+    private final int VIEW_PROG = 0;
     private List<Response.ArrayBean> mCustomList;
     private Context mContext;
 
@@ -27,46 +29,98 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
         this.mCustomList = mCustomList;
     }
 
+//    @Override
+//    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+//        View v = LayoutInflater.from(viewGroup.getContext())
+//                .inflate(R.layout.grid_item, viewGroup, false);
+//        ViewHolder viewHolder = new ViewHolder(v);
+//        return viewHolder;
+//    }
+
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        View v = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.grid_item, viewGroup, false);
-        ViewHolder viewHolder = new ViewHolder(v);
-        return viewHolder;
+    public int getItemViewType(int position) {
+        return mCustomList.get(position) != null ? VIEW_ITEM : VIEW_PROG;
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder viewHolder, int position) {
-        viewHolder.title.setText(mCustomList.get(position).getTitle());
-        viewHolder.desc.setText(mCustomList.get(position).getDesc());
-        Picasso.with(mContext)
-                .load(mCustomList.get(position).getUrl())
-                .error(R.drawable.error)
-                .fit()
-                .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
-                .placeholder(R.drawable.sample)
-                .into(viewHolder.picture);
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+        RecyclerView.ViewHolder vh;
+        if(viewType == VIEW_ITEM) {
+            View v = LayoutInflater.from(viewGroup.getContext())
+                    .inflate(R.layout.grid_item, viewGroup, false);
+            vh = new ViewHolder(v);
+        }
+        else {
+            View v = LayoutInflater.from(viewGroup.getContext())
+                    .inflate(R.layout.progressbar_item, viewGroup, false);
+            vh = new ProgressViewHolder(v);
+        }
+
+        return vh;
     }
 
-//    public void addListItemToAdapter(List<Response.ArrayBean> list) {
-////        mCustomList.addAll(list);
-////        mCustomList.remove(1);
-//        mCustomList.add(10, list.get(1));
-//        this.notifyDataSetChanged();
-//
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof ViewHolder) {
+            ((ViewHolder)holder).title.setText(mCustomList.get(position).getTitle());
+            ((ViewHolder)holder).desc.setText(mCustomList.get(position).getDesc());
+            Picasso.with(mContext)
+                    .load(mCustomList.get(position).getUrl())
+                    .error(R.drawable.error)
+                    .fit()
+                    .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
+                    .placeholder(R.drawable.sample)
+                    .into(((ViewHolder)holder).picture);
+        } else {
+//            ((ProgressViewHolder) viewHolder).progressBar.setIndeterminate(true);
+        }
+    }
+
+//    @Override
+//    public void onBindViewHolder(ViewHolder viewHolder, int position) {
+//        viewHolder.title.setText(mCustomList.get(position).getTitle());
+//        viewHolder.desc.setText(mCustomList.get(position).getDesc());
+//        Picasso.with(mContext)
+//                .load(mCustomList.get(position).getUrl())
+//                .error(R.drawable.error)
+//                .fit()
+//                .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
+//                .placeholder(R.drawable.sample)
+//                .into(viewHolder.picture);
+//    }
+
+//    @Override
+//    public void onBindViewHolder(ViewHolder viewHolder, int position) {
+//        if (viewHolder instanceof ViewHolder) {
+//            viewHolder.title.setText(mCustomList.get(position).getTitle());
+//            viewHolder.desc.setText(mCustomList.get(position).getDesc());
+//            Picasso.with(mContext)
+//                    .load(mCustomList.get(position).getUrl())
+//                    .error(R.drawable.error)
+//                    .fit()
+//                    .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
+//                    .placeholder(R.drawable.sample)
+//                    .into(viewHolder.picture);
+//        } else {
+////            ((ProgressViewHolder) viewHolder).progressBar.setIndeterminate(true);
+//        }
 //    }
 
     public void addListItemToAdapter(List<Response.ArrayBean> list) {
+//        mCustomList.remove(mCustomList.size() - 1);
+//        this.notifyItemRemoved(mCustomList.size());
         mCustomList.addAll(list);
-//        mCustomList.remove(1);
-//        mCustomList.add(0, new Response.ArrayBean());
-//        mCustomList.remove(1);
         this.notifyDataSetChanged();
-
     }
 
-    public int update() {
-        return 0;
+    public void addProgressBar() {
+        mCustomList.add(null);
+        this.notifyItemInserted(mCustomList.size() - 1);
+    }
+
+    public void removeProgressBar() {
+        mCustomList.remove(mCustomList.size() - 1);
+        this.notifyItemRemoved(mCustomList.size());
     }
 
     public int getItemCount() {
@@ -74,7 +128,6 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-
         public ImageView picture;
         public TextView title;
         public TextView desc;
@@ -85,6 +138,15 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
             picture = (ImageView) itemView.findViewById(R.id.imageIv);
             title = (TextView) itemView.findViewById(R.id.titleTv);
             desc = (TextView) itemView.findViewById(R.id.descTv);
+        }
+    }
+
+    static class ProgressViewHolder extends RecyclerView.ViewHolder {
+        public ProgressBar progressBar;
+
+        public ProgressViewHolder(View itemView) {
+            super(itemView);
+            progressBar = (ProgressBar) itemView.findViewById(R.id.progressBar);
         }
     }
 }

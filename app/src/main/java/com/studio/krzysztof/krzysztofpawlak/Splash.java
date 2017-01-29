@@ -41,8 +41,8 @@ public class Splash extends Activity {
     }
 
     public void tmpActivity() {
-        Intent i = new Intent(getApplicationContext(), PhotoActivity.class);
-        startActivity(i);
+//        Intent i = new Intent(getApplicationContext(), PhotoActivity.class);
+//        startActivity(i);
         finish();
     }
 
