@@ -20,7 +20,13 @@ import java.util.List;
 public class CustomAdapter extends BaseAdapter {
     private List<Response.ArrayBean> mCustomList;
     private Context mContext;
+    private ImageView picture;
+    private TextView title;
+    private TextView desc;
+    private String imgUrl;
+    private Response.ArrayBean item;
     private LayoutInflater inflater;
+    private View rowView;
 
     public CustomAdapter(Context mContext, List<Response.ArrayBean> mCustomList) {
         this.mContext = mContext;
@@ -44,17 +50,17 @@ public class CustomAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        LayoutInflater inflater = (LayoutInflater) mContext
+        inflater = (LayoutInflater) mContext
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View rowView = inflater.inflate(R.layout.list_item, viewGroup, false);
+        rowView = inflater.inflate(R.layout.list_item, viewGroup, false);
 
-        Response.ArrayBean item = (Response.ArrayBean) getItem(i);
+        item = (Response.ArrayBean) getItem(i);
 
-        ImageView picture = (ImageView) rowView.findViewById(R.id.imageIv);
-        TextView title = (TextView) rowView.findViewById(R.id.titleTv);
-        TextView desc = (TextView) rowView.findViewById(R.id.descTv);
+        picture = (ImageView) rowView.findViewById(R.id.imageIv);
+        title = (TextView) rowView.findViewById(R.id.titleTv);
+        desc = (TextView) rowView.findViewById(R.id.descTv);
 
-        String imgUrl = item.getUrl();
+        imgUrl = item.getUrl();
         Picasso.with(mContext)
                 .load(imgUrl)
                 .error(R.drawable.error)

@@ -7,7 +7,7 @@ import java.util.List;
  */
 
 public class Response {
-    
+
     private List<ArrayBean> array;
 
     public List<ArrayBean> getArray() {

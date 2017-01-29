@@ -12,9 +12,13 @@ public class Splash extends AppCompatActivity {
 
     private static final int TIME = 5000;
 
-    private Handler handler;
+    private static Handler handler;
     private boolean isMinimazed = false;
     private boolean splashIsCanceled = false;
+    private int backButtonCount;
+
+    private SharedPreferences getPrefs;
+    private boolean isLogged;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,42 +26,29 @@ public class Splash extends AppCompatActivity {
         getSupportActionBar().hide();
         setContentView(R.layout.splash_screen);
 
-        final SharedPreferences getPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        boolean isLogged = getPrefs.getBoolean("checkbox", false);
+        getPrefs = PreferenceManager.getDefaultSharedPreferences(getApplication());
+        isLogged = getPrefs.getBoolean("checkbox", false);
 
         handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-//                chooseNextAcivity();
+                chooseNextAcivity();
                 finish();
             }
         }, TIME);
-
-//        tmpActivity();
-        chooseNextAcivity();
-    }
-
-    public void tmpActivity() {
-        Intent i = new Intent(getApplicationContext(), PhotoActivity.class);
-        startActivity(i);
-        finish();
     }
 
     public void chooseNextAcivity() {
-        SharedPreferences getPrefs = PreferenceManager.getDefaultSharedPreferences(getApplication());
-        boolean isLogged = getPrefs.getBoolean("checkbox", false);
 
         if (isLogged == false) {
             Intent i = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(i);
         } else {
-            Intent i = new Intent(getApplicationContext(), MainActivity.class);
+            Intent i = new Intent(getApplicationContext(), PhotoActivity.class);
             startActivity(i);
         }
     }
-
-    int backButtonCount;
 
     @Override
     public void onBackPressed() {

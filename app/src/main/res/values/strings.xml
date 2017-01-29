@@ -3,4 +3,5 @@
     <string name="title_activity_splash">Splash</string>
     <string name="bottom_rotate">Lets Rotate More</string>
     <string name="created_by">Created by Krzysztof Studio</string>
+    <string name="title_activity_main2">Main2Activity</string>
 </resources>
