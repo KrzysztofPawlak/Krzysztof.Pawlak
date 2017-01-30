@@ -39,7 +39,7 @@ public class GridMaterialPhotoActivity extends Activity {
     private int previousTotal = 0;
     private boolean loading = true;
     private int visibleThreshold = 5;
-    private int firstVisibleItem, lastVisibleItem, visibleItemCount, totalItemCount;
+    private int firstVisibleItem, visibleItemCount, totalItemCount;
     private long startTime, stopTime, difference;
     private double sec;
 
