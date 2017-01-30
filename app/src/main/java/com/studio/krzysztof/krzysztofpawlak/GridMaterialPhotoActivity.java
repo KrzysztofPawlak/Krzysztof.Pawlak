@@ -1,8 +1,10 @@
 package com.studio.krzysztof.krzysztofpawlak;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -42,6 +44,7 @@ public class GridMaterialPhotoActivity extends Activity {
     private int firstVisibleItem, visibleItemCount, totalItemCount;
     private long startTime, stopTime, difference;
     private double sec;
+    private int columns;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -75,7 +78,14 @@ public class GridMaterialPhotoActivity extends Activity {
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mRecyclerView.setAdapter(hfAdapter);
-        manager = new GridLayoutManager(this, 2);
+
+        if (isTablet(getApplicationContext())) {
+            columns = 4;
+        } else {
+            columns = 2;
+        }
+
+        manager = new GridLayoutManager(this, columns);
 
         mRecyclerView.setLayoutManager(manager);
         manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
@@ -117,6 +127,13 @@ public class GridMaterialPhotoActivity extends Activity {
                 }
             }
         });
+    }
+
+    // from Google I/O 2013 app source code, maybe now not working
+    public static boolean isTablet(Context context) {
+        return (context.getResources().getConfiguration().screenLayout
+                & Configuration.SCREENLAYOUT_SIZE_MASK)
+                >= Configuration.SCREENLAYOUT_SIZE_LARGE;
     }
 
     private Response takeData() {
