@@ -69,13 +69,17 @@ public class GridAdapter extends RecyclerView.Adapter {
     }
 
     public void addListItemToAdapter(List<Response.ArrayBean> list) {
+//        mCustomList.remove(mCustomList.size() - 1);
+//        this.notifyItemRemoved(mCustomList.size());
+//        this.notifyAll();
+//        mCustomList.notifyAll();
         mCustomList.addAll(list);
         this.notifyDataSetChanged();
     }
 
     public void addProgressBar() {
         mCustomList.add(null);
-        this.notifyItemInserted(mCustomList.size() - 1);
+        this.notifyItemInserted(mCustomList.size());
     }
 
     public void removeProgressBar() {

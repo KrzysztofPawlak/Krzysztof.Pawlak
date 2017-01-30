@@ -5,40 +5,43 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
-import java.util.ArrayList;
-
 import cz.msebera.android.httpclient.Header;
 
 public class GridMaterialPhotoActivity extends Activity {
-    RecyclerView mRecyclerView;
-    GridLayoutManager mLayoutManager;
-    GridAdapter mAdapter;
-    Response responseObject;
-    //    static String BASE_SERVER_URL = "http://127.0.0.1:8080";
+
+//    static String BASE_SERVER_URL = "http://127.0.0.1:8080";
 //    static String BASE_SERVER_URL = "http://10.0.2.2:8080";
     static String BASE_SERVER_URL = "http://sunpatrol.pe.hu";
+    private String url;
 
-    public Handler mHandler;
-    int nrJSONFile = 0;
+    private RecyclerView mRecyclerView;
+    final HFAdapter hfAdapter = new HFAdapter(this);
+    private GridLayoutManager manager;
+    private View footerView;
 
-    Gson gson;
-    AsyncHttpClient client;
+    private Gson gson;
+    private AsyncHttpClient client;
+    private Response responseObject;
 
+    private int nrJSONFile = 0;
     private int previousTotal = 0;
     private boolean loading = true;
     private int visibleThreshold = 5;
-    int firstVisibleItem, lastVisibleItem, visibleItemCount, totalItemCount;
+    private int firstVisibleItem, lastVisibleItem, visibleItemCount, totalItemCount;
+    private long startTime, stopTime, difference;
+    private double sec;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -68,15 +71,25 @@ public class GridMaterialPhotoActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo_material_grid);
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        mRecyclerView.setHasFixedSize(true);
-
-        mLayoutManager = new GridLayoutManager(this, 2);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mLayoutManager.findLastVisibleItemPosition();
-
-        mHandler = new GridMaterialPhotoActivity.MyHandler();
         client = new AsyncHttpClient();
+
+        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        mRecyclerView.setAdapter(hfAdapter);
+        manager = new GridLayoutManager(this, 2);
+
+        mRecyclerView.setLayoutManager(manager);
+        manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                if ((hfAdapter.hasHeader() && hfAdapter.isHeader(position)) ||
+                        hfAdapter.hasFooter() && hfAdapter.isFooter(position))
+                    return manager.getSpanCount();
+                return 1;
+            }
+        });
+
+        footerView = LayoutInflater.from(this).inflate(R.layout.footer_view, mRecyclerView, false);
+
         takeData();
 
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -86,9 +99,8 @@ public class GridMaterialPhotoActivity extends Activity {
                 super.onScrolled(recyclerView, dx, dy);
 
                 visibleItemCount = mRecyclerView.getChildCount();
-                totalItemCount = mLayoutManager.getItemCount();
-                firstVisibleItem = mLayoutManager.findFirstVisibleItemPosition();
-                lastVisibleItem = mLayoutManager.findLastVisibleItemPosition();
+                totalItemCount = manager.getItemCount();
+                firstVisibleItem = manager.findFirstVisibleItemPosition();
 
                 if (loading) {
                     if (totalItemCount > previousTotal) {
@@ -99,28 +111,16 @@ public class GridMaterialPhotoActivity extends Activity {
 
                 if (!loading && (totalItemCount - visibleItemCount)
                         <= (firstVisibleItem + visibleThreshold)) {
-
                     nrJSONFile++;
-//                    mAdapter.addProgressBar();
-//                    mHandler.sendEmptyMessage(0);
-//                    mHandler.sendEmptyMessage(2);
-//                    mAdapter.addProgressBar();
-
                     takeData();
                     loading = true;
-//                    Toast.makeText(getApplicationContext(),
-//                            "dodaj" + nrJSONFile + "//" +
-//                                    "dodaj" + totalItemCount + "//" +
-//                                    "dodaj" + totalItemCount + "//" +
-//                                    "dodaj" + visibleItemCount + "//"
-//                            , Toast.LENGTH_LONG).show();
                 }
             }
         });
     }
 
     private Response takeData() {
-        String url = BASE_SERVER_URL + "/page_" + nrJSONFile + ".json";
+        url = BASE_SERVER_URL + "/page_" + nrJSONFile + ".json";
 
         client.get(GridMaterialPhotoActivity.this, url, new AsyncHttpResponseHandler() {
 
@@ -131,33 +131,47 @@ public class GridMaterialPhotoActivity extends Activity {
                 if (!responseString.contains("Error 404 - Page Not Found")) {
                     gson = new Gson();
                     responseObject = gson.fromJson(responseString, Response.class);
+
                     if (nrJSONFile == 0) {
-//                        gridView.addFooterView(ftView);
-//                        gridView.setAdapter(adapter);
-
-                        mAdapter = new GridAdapter(GridMaterialPhotoActivity.this, responseObject.getArray());
-                        mRecyclerView.setAdapter(mAdapter);
+                        hfAdapter.setData(responseObject.getArray());
                     } else {
+                        stopTime = System.nanoTime();
+                        difference = stopTime - startTime;
+                        sec = (double) difference / 1000000000.0;
 
-//                        mAdapter.removeProgressBar();
-                        Message msg = mHandler.obtainMessage(1, responseObject.getArray());
-                        mHandler.sendMessage(msg);
-//                                mHandler.sendEmptyMessage(2);
+                        if (sec < 1.0) { // only for show progress bar when too fast
+                            Handler handlerTimer = new Handler();
+                            handlerTimer.postDelayed(new Runnable() {
+                                public void run() {
+                                    hfAdapter.removeFooter();
+                                    hfAdapter.addData(responseObject.getArray());
+                                }
+                            }, 2000);
+                        } else {
+                            hfAdapter.removeFooter();
+                            hfAdapter.addData(responseObject.getArray());
+                        }
                     }
                 } else {
-//                    mHandler.sendEmptyMessage(2);
+
                 }
             }
 
             @Override
             public void onProgress(long bytesWritten, long totalSize) {
                 super.onProgress(bytesWritten, totalSize);
+                hfAdapter.setFooterView(footerView);
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-//                Toast.makeText(getApplicationContext(), "nie poszlo",
-//                        Toast.LENGTH_LONG).show();
+
+            }
+
+            @Override
+            public void onStart() {
+                super.onStart();
+                startTime = System.nanoTime();
             }
 
             @Override
@@ -169,25 +183,6 @@ public class GridMaterialPhotoActivity extends Activity {
         return responseObject;
     }
 
-    public class MyHandler extends Handler {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case 0:
-                    mAdapter.addProgressBar();
-                    break;
-                case 1:
-                    mAdapter.addListItemToAdapter((ArrayList<Response.ArrayBean>) msg.obj);
-                    loading = false;
-                    break;
-                case 2:
-//                    mAdapter.removeProgressBar();
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
 }
 
 

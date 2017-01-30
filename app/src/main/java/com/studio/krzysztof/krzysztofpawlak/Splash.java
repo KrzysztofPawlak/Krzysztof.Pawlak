@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 public class Splash extends Activity {
 
-    private static final int TIME = 5000;
+    private static final int TIME = 1000;
 
     private Handler handler;
     private boolean isMinimazed = false;
