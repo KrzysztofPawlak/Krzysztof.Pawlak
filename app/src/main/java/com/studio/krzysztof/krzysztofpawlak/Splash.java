@@ -1,6 +1,7 @@
 package com.studio.krzysztof.krzysztofpawlak;
 
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -41,8 +42,7 @@ public class Splash extends Activity {
     public void chooseNextAcivity() {
 
         if (isLogged == false) {
-            Intent i = new Intent(getApplicationContext(), LoginActivity.class);
-            startActivity(i);
+            slideTransition();
         } else {
             Intent i = new Intent(getApplicationContext(), GridMaterialPhotoActivity.class);
             startActivity(i);
@@ -83,5 +83,13 @@ public class Splash extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    private void slideTransition() {
+        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this);
+        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        intent.putExtra(Constants.KEY_ANIM_TYPE, Constants.TransitionType.SlideTrans);
+        intent.putExtra(Constants.KEY_TITLE, "Slide");
+        startActivity(intent, options.toBundle());
     }
 }

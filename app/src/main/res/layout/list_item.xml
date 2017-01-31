@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#4588E4"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:elevation="30dp">
 
 
     <LinearLayout
@@ -12,6 +13,7 @@
         android:layout_weight="1">
 
         <ImageView
+            android:background="@drawable/myrect"
             android:id="@+id/imageIv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -44,7 +46,6 @@
             android:layout_toRightOf="@+id/imageIv"
             android:textColor="#FFFF"
             android:textSize="12dp" />
-
     </LinearLayout>
 
 </LinearLayout>

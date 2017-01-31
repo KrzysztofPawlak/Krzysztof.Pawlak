@@ -1,12 +1,15 @@
 package com.studio.krzysztof.krzysztofpawlak;
 
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.transition.Slide;
 import android.util.Patterns;
+import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -27,6 +30,7 @@ public class LoginActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
@@ -38,6 +42,8 @@ public class LoginActivity extends Activity {
 
         buttonRotate.setOnClickListener(btnRotate);
         mSignUpButton.setOnClickListener(btnSign);
+
+        setupWindowAnimation();
 
         rotate();
     }
@@ -87,13 +93,27 @@ public class LoginActivity extends Activity {
         }
     }
 
+    private void slideTransition() {
+        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this);
+        Intent intent = new Intent(getApplicationContext(), GridMaterialPhotoActivity.class);
+        intent.putExtra(Constants.KEY_ANIM_TYPE, Constants.TransitionType.SlideTrans);
+        intent.putExtra(Constants.KEY_TITLE, "Slide");
+        startActivity(intent, options.toBundle());
+    }
+
     private void signUp() {
         savePreferences("checkbox", true);
-
-        Intent intent = new Intent(getApplicationContext(), GridMaterialPhotoActivity.class);
-        startActivity(intent);
-
+        slideTransition();
         finish();
+    }
+
+    private void setupWindowAnimation() {
+        Slide slideTransition = new Slide();
+        slideTransition.setSlideEdge(Gravity.RIGHT);
+        slideTransition.setDuration(2000);
+        getWindow().setEnterTransition(slideTransition);
+        getWindow().setExitTransition(slideTransition);
+        getWindow().setAllowReturnTransitionOverlap(false);
     }
 
     private void savePreferences(String key, boolean value) {
